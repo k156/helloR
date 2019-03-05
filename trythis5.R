@@ -13,3 +13,7 @@ avg = apply(smdt[, 2:4], MARGIN = 1, FUN = mean)
 smdt = cbind(smdt, total =total)
 smdt = cbind(smdt, avg =avg)
 
+
+
+for (i in 2016:2019) 
+  for (j in month.abb) {print( i-j)}
