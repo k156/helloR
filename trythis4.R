@@ -14,10 +14,10 @@ colnames(midwest)[10] = "asian"
 #5
 asianperc = (midwest$asian/sum(midwest$total))*100
 midwest$asianpct = asianperc
-hist(midwest$asianpct)
 
 #6
 asian_pop = aggregate(asianpct~state, midwest, sum)
+asian_pop
 
 #7
 mean(midwest$asianpct)
