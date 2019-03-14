@@ -270,8 +270,8 @@ head(kor95)</code></pre>
 <div id="midwest--------." class="section level3">
 <h3>4. midwest데이터에서 전체인구와 아시아계 인구의 관계를 알아보기 위한 그래프를 그리시오.</h3>
 </div>
-<div id="--50---1--" class="section level3">
-<h3>(단, 전체인구는 50만명 이하, 아시아계인구는 1만명 이하만 표시되게)</h3>
+<div id="--50---1--." class="section level3">
+<h3>(단, 전체인구는 50만명 이하, 아시아계인구는 1만명 이하만 표시되게.)</h3>
 <pre class="r"><code>d = midwest %&gt;% filter(poptotal &lt;= 500000, popasian &lt;= 10000)
 ggplot() +
   geom_point(data=d,
