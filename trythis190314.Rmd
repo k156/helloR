@@ -1,0 +1,83 @@
+---
+title: "Trythis190314"
+author: "Jeongmin"
+date: "2019년 3월 14일"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library('ggplot2')
+library('dplyr')
+
+
+load('data/data_eng.rda')
+head(data)
+mpg = as.data.frame(ggplot2::mpg)
+midwest = as.data.frame(ggplot2::midwest)
+
+
+```
+
+
+### 1. mpg데이터에서 연도별 배기량에 따른 통합연비를 꺽은선으로 그리시오.
+### (단, 2008년은 굵은 선으로 표현하시오)
+
+```{r , echo=TRUE}
+  
+  d2 = mpg %>% group_by(year, displ) %>%
+  summarize(m1 = mean(cty), m2 = mean(hwy))
+
+  ggplot(data= d2, aes(x=displ)) +
+  geom_line(aes(group = year, y=m1, color='cty', size = factor(year))) + 
+  geom_line(aes(group = year, y=m2, color='hwy',size = factor(year))) +
+  scale_colour_manual("", breaks = c("cty", "hwy"),
+                      values = c("gray", "pink")) +
+    scale_size_manual("", breaks = c("1999", "2008"),
+                        values = c(0.5, 2)) +
+  xlab("배기량(cc)") +
+  scale_y_continuous("연비(M/h)") +
+  labs(title = '연도별 통합 연비', subtitle = '(굵은 선은 2008년)')
+  
+```
+
+
+
+
+### 2. data(성적.csv) 데이터에서 국어 성적이 80점 이상인 학생들의 수를 성비가 보이도록 학급별로 막대그래프를 그리시오.
+
+```{r, echo=TRUE}
+
+  kor80 = data %>% filter(kor > 80)
+
+
+  ggplot(kor80, aes(반)) +
+  geom_bar(aes(fill=성별),
+           width = 0.5) +
+  labs(y="학생수") +
+  scale_fill_discrete(name = "성별") +     
+  labs(title = '국어 우수 학생', subtitle = '80점 이상')
+```
+
+
+
+
+### 3. 국어 성적이 95점 이상인 학생들의 점수별 밀도그래프를 그리시오.
+
+```{r, echo=TRUE}
+kor95 = data %>% filter(kor > 95)
+head(kor95)
+  ggplot(kor95, aes(kor)) +
+    geom_density(aes(fill=factor(반)), alpha=0.5) +
+    labs(title="반별 국어 우수 학생", subtitle = "(국어 성적 A+)",
+         caption="기준점수 >= 95",
+         x = "성적",
+         y = "밀도",
+         fill = "학급")
+```
+
+
+
+
+
