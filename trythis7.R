@@ -3,9 +3,9 @@
 
   d2 = mpg %>% group_by(year, displ) %>%
    summarise(m1 = mean(cty), m2 = mean(hwy))
-  d3 = mpg %>% group_by(year, displ) %>% 
-    filter(year== 2008) %>%
-    summarise(m3 = mean(cty), m4 = mean(hwy))
+  # d3 = mpg %>% group_by(year, displ) %>% 
+  #   filter(year== 2008) %>%
+  #   summarise(m3 = mean(cty), m4 = mean(hwy))
 
   ggplot(data= d2, aes(x=displ)) +
   geom_line(aes(group = year, y=m1, color='cty', size = factor(year))) + 
@@ -84,4 +84,5 @@ ggplot() +
              color='blue', size = 1)
   
 
+save(data, file= '../hellor/data/data_eng.rda')
 
