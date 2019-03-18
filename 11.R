@@ -1,4 +1,6 @@
 install.packages('ggiraphExtra')
+install.packages('maps')
+
 library(ggiraphExtra)
 
 ggChoropleth(data=chodata,
@@ -59,8 +61,7 @@ library(ggiraph)
   
   
   ####### 우리나라
-  
-  
+
   install.packages('devtools')
   devtools::install_github("cardiomoon/kormaps2014")
   library(kormaps2014)  
@@ -72,14 +73,18 @@ library(ggiraph)
     library(ggplot2)
     library(dplyr)
     library(ggiraph)
-    library(ggChoropleth)
-    library(kormaps2014)  
-    
+    library(ggiraphExtra)
+    library(kormaps2014) 
+    library(plotly)
+    library(dygraphs)
+    library(xts)  
+    library(gridExtra)
   }
   setlib()
 
-  
-  kdata = kormaps2014::changeCode(korpop1)
+ # rm(kdata)
+#  kdata = kormaps2014::changeCode(korpop1)
+  kdata = korpop1
   head(kdata)
   colnames(kdata)
   kdata = kdata %>% rename (pop = 총인구_명)
@@ -90,6 +95,42 @@ library(ggiraph)
                aes(fill = pop, map_id = code, tooltip = area),
                map = kormap1,
                interactive = T)  
+
+  ggplot(kdata, aes(data = pop, map_id = code)) +
+    geom_map( aes(fill = pop), map = kormap1) + 
+    expand_limits(x = kormap1$long, y = kormap1$lat) +
+    scale_fill_gradient2('인구', low='darkblue') +
+    xlab('경도') + ylab('위도') + 
+    labs(title="시도별 인구")
+  
+  
+  
+  install.packages('plotly')
+  
+  t = ggplot(data, aes(eng, kor)) +
+    geom_point(aes(color=eng, size=kor), alpha=0.3)
+  
+  ggplotly(t)
+  
+
+  
+  
+  install.packages('dygraphs')
+  
+  library(xts)  
+  
+  
+  economics
+  ue = xts(economics$unemploy, order.by = economics$date)  
+  ue
+  dygraph(ue)
+  dygraph(ue) %>% dyRangeSelector()
+  psave = xts(economics$psavert, order.by = economics$date)
+ # dygraph(cbind(ue, psave))  
+  ue2 = xts(economics$unemploy / 1000, order.by = economics$date)
+  pu = cbind(ue2, psave)  
+  colnames(pu) = c('unemploy', 'saverate')
+  dygraph(pu) %>% dyRangeSelector()
   
   
   
