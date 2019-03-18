@@ -1,0 +1,10 @@
+name: Publish Document
+title:
+username:
+account: rpubs
+server: rpubs.com
+hostUrl: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/477256/98b2d014469e468197e723d8ef4f7660
+bundleId: https://api.rpubs.com/api/v1/document/477256/98b2d014469e468197e723d8ef4f7660
+url: http://rpubs.com/senorburns/477256/edit
+when: 1552891451.07573

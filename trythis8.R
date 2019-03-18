@@ -1,31 +1,45 @@
 # 1.다음과 같이 미국의 범죄율을 한번에 작도하시오.
+chodata = rownames_to_column(USArrests, var = 'state')
+chodata$state = tolower(chodata$state)
+usmap = map_data('state')
 
-m = ggplot(chodata, aes(map_id = state)) + 
-  geom_map(aes(fill = Murder), map = usmap) + 
-  expand_limits(x = usmap$long, y = usmap$lat) +
-  labs(title="", fill = '')
+# m = ggplot(chodata, aes(map_id = state)) + 
+#   geom_map(aes(fill = Murder), map = usmap) + 
+#   expand_limits(x = usmap$long, y = usmap$lat) +
+#   labs(title="", fill = '')
+# 
+# a = ggplot(chodata, aes(map_id = state)) + 
+#   geom_map(aes(fill =Assault), map = usmap) + 
+#   expand_limits(x = usmap$long, y = usmap$lat) +
+#   labs(title="", fill = '')
+# 
+# 
+# u =  ggplot(chodata, aes(map_id = state)) + 
+#   geom_map(aes(fill = UrbanPop), map = usmap) + 
+#   expand_limits(x = usmap$long, y = usmap$lat) +
+#   labs(title="", fill = '')
+# 
+# r =  ggplot(chodata, aes(map_id = state)) + 
+#   geom_map(aes(fill = Rape), map = usmap) + 
+#   expand_limits(x = usmap$long, y = usmap$lat) +
+#   labs(title="", fill = '')
+# 
+# 
+# grid.arrange(u, r, ncol=2)
+# grid.arrange(grid.arrange(m,a, ncol=2), grid.arrange(u,r, ncol=2), ncol=1) 
+# 
 
-a = ggplot(chodata, aes(map_id = state)) + 
-  geom_map(aes(fill =Assault), map = usmap) + 
-  expand_limits(x = usmap$long, y = usmap$lat) +
-  labs(title="", fill = '')
+# temp =  ggplot(chodata, map_id = state) +
+#   geom_map(aes(fill = c(Rape, Assault, Murder, UrbanPop)), map = usmap) +
+#   expand_limits(x = usmap$long, y = usmap$lat) +
+#   labs(title="", fill = '')
+# temp
 
-
-u =  ggplot(chodata, aes(map_id = state)) + 
-  geom_map(aes(fill = UrbanPop), map = usmap) + 
-  expand_limits(x = usmap$long, y = usmap$lat) +
-  labs(title="", fill = '')
-
-r =  ggplot(chodata, aes(map_id = state)) + 
-  geom_map(aes(fill = Rape), map = usmap) + 
-  expand_limits(x = usmap$long, y = usmap$lat) +
-  labs(title="", fill = '')
-
-
-grid.arrange(u, r, ncol=2)
-grid.arrange(grid.arrange(m,a, ncol=2), grid.arrange(u,r, ncol=2), ncol=1) 
-
-
+ggChoropleth(data = chodata,
+             aes(fill = c(Murder,Assault, UrbanPop, Rape), map_id = state),
+             map = usmap,
+             reverse = F,
+             interactive = T)
 
 
 
@@ -43,6 +57,7 @@ tooltips = paste0(
 
 onclick = sprintf('window.open("http://en.wikipedia.org/wiki/%s/")', as.character(chodata$state))
 
+onclick
 
 ggplot(chodata, aes(data = Rape, map_id = state)) +
 geom_map_interactive( 
@@ -84,3 +99,4 @@ ggChoropleth(data=t,
              interactive = F)
 
 
+save(kdata, file = 'data/kdata.rda')
