@@ -102,7 +102,7 @@ ggChoropleth(data=t,
              map = kormap1,
              title = '시도별 결핵환자수',
              reverse = F,
-             interactive = F)
+             interactive = T)
 
 
 
