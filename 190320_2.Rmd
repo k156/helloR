@@ -1,0 +1,47 @@
+---
+title: "190320_2"
+author: "Jeongmin"
+date: "2019년 3월 20일"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library('ggplot2')
+library('dplyr')
+load('data/grade.rda')
+
+```
+
+### data(성적.csv) 데이터에서 수학 성적이 90점 이상인 학생들에 대해 다음 2개의 그래프를 작도하는 코드를 작성하시오.
+
+##### 1)학생 수를 성비가 보이도록 학급별로 막대그래프
+```{r, echo = TRUE}
+
+math90 = data %>% filter(math >= 90)
+
+ggplot(math90, aes(cls)) +
+  geom_bar(aes(fill=gender),
+           width = 0.5) +
+  labs(y="학생수") +
+  scale_fill_discrete(name = "성별") +     
+  labs(title = '수학 우수 학생', subtitle = '90점 이상')
+
+```
+
+
+
+##### 2) 학급별 밀도 그래프
+```{r, echo=TRUE}
+
+ggplot(math90, aes(math)) +
+  geom_density(aes(fill=factor(cls)), alpha=0.5) +
+  labs(title="반별 수학 우수 학생", subtitle = "(수학 성적 A+)",
+       caption="기준점수 >= 90",
+       x = "성적",
+       y = "밀도",
+       fill = "학급")
+
+```
+
