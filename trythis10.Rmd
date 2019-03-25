@@ -1,0 +1,59 @@
+---
+title: "TryThis 190409"
+author: "Jeongmin"
+date: "2019년 4월 9일"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(twitteR); library(RCurl); library(RJSONIO); library(stringr)
+library(streamR); library(ROAuth)
+
+library(rJava)
+library(KoNLP)
+library(RColorBrewer)
+library(wordcloud)
+
+load('data/api_key.rda')
+load('data/api_secret.rda')
+load('data/token.rda')
+load('data/token_secret.rda')
+setup_twitter_oauth(API_key, API_secret, token, token_secret)
+```
+
+
+### 1. 본인이 원하는 검색어로 트위터 트윗을 가져와 워드클라우드를 작도하시오.
+
+```{r, echo=TRUE}
+tyt = searchTwitter(enc2utf8('태용'), n=100, lan='ko',
+                       since='2019-03-01', until='2019-03-25')
+ty = twListToDF(tyt)
+ty = unique(ty$text)
+
+ty = gsub("[[:cntrl:]]", "", ty)                      # 제어문자(\n, \t등) 제거
+ty = gsub("http[s]?://[[:alnum:].\\/]+", "", ty)     # link 제거
+ty = gsub("&[[:alnum:]]+;", "", ty)            # escape(&amp; &lt;등) 제거
+ty = gsub("@[[:alnum:]]+[:]?", "", ty)             # 트위터 계정 부분 제거
+ty = gsub("[ㄱ-ㅎㅏ-ㅣ]","",ty)                   # 한글 불용어(ㅋㅋㅎㅎ ㅠㅜ등) 제거
+ty = gsub("<.*>", "", enc2native(ty))      # EMO(/U00000f등) 제거 (windows)
+ty = gsub("\\s{2,}", " ", ty)                  # 2개이상 공백을 한개의 공백으로 처리
+ty = gsub("https", "", ty)
+ty = gsub("RT.*_?.*:", "", ty)
+ty = gsub("RT", "", ty)
+ty = gsub("[[:punct:]]", "", ty)               # 특수 문자 제거 (앞의 처리 때문에 마지막에 해야 함!!)
+
+buildDictionary(ext_dic = "woorimalsam", user_dic=data.frame("태용","ncn"),replace_usr_dic = T)
+
+tyn = sapply(ty, extractNoun, USE.NAMES = F)
+tyn1 = table(unlist(tyn))
+
+tyn2 = head(sort(tyn1, decreasing = T), 100)
+
+pal = brewer.pal(9, "Set1")
+wordcloud(names(tyn2), freq=tyn2, scale=c(5,0.5), rot.per=0.25,
+          min.freq = 1, random.order = F, random.color = T, colors = pal)
+
+
+```
+

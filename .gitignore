@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+.httr-oauth
+data/api_key.rda
+data/api_secret.rda
+data/token.rda
+data/token_secret.rda
+api_keys.R

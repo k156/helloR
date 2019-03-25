@@ -11,3 +11,8 @@ library(kormaps2014)
 load('data/kdata.rda')
 
 library(plotly)
+
+
+library(tm)
+library(RColorBrewer)
+library(wordcloud)
