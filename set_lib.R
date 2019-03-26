@@ -16,3 +16,11 @@ library(plotly)
 library(tm)
 library(RColorBrewer)
 library(wordcloud)
+library(KoNLP)
+library(arules); library(igraph); library(combinat)
+library(arulesViz); library(visNetwork)
+library(rvest); library(httr); library(stringr)
+
+
+
+

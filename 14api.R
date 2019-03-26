@@ -87,7 +87,7 @@ ty = gsub("RT.*_?.*:", "", ty)
 ty = gsub("RT", "", ty)
 ty = gsub("[[:punct:]]", "", ty)               # 특수 문자 제거 (앞의 처리 때문에 마지막에 해야 함!!)
 
-buildDictionary(ext_dic = "woorimalsam", user_dic=data.frame("태용","ncn"),replace_usr_dic = T)
+buildDictionary(ext_dic = "woorimalsam", user_dic=data.frame(c("태용", "이태용"),"ncn"),replace_usr_dic = T)
 
 tyn = sapply(ty, extractNoun, USE.NAMES = F)
 tyn1 = table(unlist(tyn))
