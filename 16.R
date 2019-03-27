@@ -12,17 +12,37 @@ links1
 
 links = links1[!is.na(links1)]       # NA 제거
 news = list()       # 변수 초기화
+# 
+# for (i in 1:length(links)) {
+#   try({
+#     htxt = read_html(links[i])
+#     comments = html_nodes(htxt, '#articleBodyContents')
+#     get_news = repair_encoding(html_text(comments))   # repair_encoding(html_text(comments), from='utf-8')
+#     news[i] = str_trim(get_news)
+#   }, silent = F)
+# }
 
+?stri_replace_all
+
+
+# ㅇㅇㅇ기자 이후 떼어내기
 for (i in 1:length(links)) {
-  try({
-    htxt = read_html(links[i])
-    comments = html_nodes(htxt, '#articleBodyContents')
-    get_news = repair_encoding(html_text(comments))   # repair_encoding(html_text(comments), from='utf-8')
-    news[i] = str_trim(get_news)
-  }, silent = F)
+try({}
+h = read_html(links[i])
+hh = html_nodes(h, '#articleBodyContents')
+rr = repair_encoding(html_text(hh))
+ch = html_children(hh)}  ) }
+
+
+  for (j in 1:length(ch)) {
+  chtxt = html_text(ch[j])
+  if (chtxt == "") next
+  rr = stri_replace_all(rr, "", fixed=html_text(ch[j]))
+  rr
 }
 
-#children써서 기자 이름 이후 다 지우기
+
+
 
 
 removeStopword = function(t) {
@@ -48,7 +68,7 @@ for (i in 1:length(news)) {
   news[[i]][1] = gsub("flash 오류를 우회하기 위한 함수 추가function flash removeCallback", "", news[[i]][1])
 }
 
-news
+
 
 
 
