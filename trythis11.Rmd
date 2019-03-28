@@ -1,4 +1,27 @@
+---
+title: "trythis_190409"
+author: "Jeongmin"
+date: "2019년 4월 9일"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(twitteR); library(RCurl); library(RJSONIO); library(stringr)
+library(streamR); library(ROAuth); library(rJava); library(KoNLP); library(dplyr)
+library(RColorBrewer); library(wordcloud);library(xml2)
+library(arules); library(igraph); library(combinat)
+library(arulesViz); library(visNetwork)
+library(rvest); library(httr); 
+```
+
+
+
+
 ###1. 네이버 뉴스 1면의 기사들을 수집하시오.
+
+```{r }
 
 newsUrl= "https://news.naver.com/main/home.nhn"
 html = read_html(newsUrl)
@@ -21,28 +44,6 @@ for (i in 1:length(links)) {
     news[i] = str_trim(get_news)
   }, silent = F)
 }
-
-??html_nodes
-
-
-# # ㅇㅇㅇ기자 이후 떼어내기
-# for (i in 1:length(links)) {
-# try({}
-# h = read_html(links[i])
-# hh = html_nodes(h, '#articleBodyContents')
-# rr = repair_encoding(html_text(hh))
-# ch = html_children(hh)}  ) }
-# 
-# 
-#   for (j in 1:length(ch)) {
-#   chtxt = html_text(ch[j])
-#   if (chtxt == "") next
-#   rr = stri_replace_all(rr, "", fixed=html_text(ch[j]))
-#   rr
-# }
-# 
-
-
 
 
 removeStopword = function(t) {
@@ -68,25 +69,30 @@ removeStopword = function(t) {
   t = gsub('제공', '', t)
   t = gsub('네이버', '', t)
   t = gsub('메인', '', t)
+  t = gsub('뉴스', '', t)
 }
 
 
 for (i in 1:length(news)) {
+  if(is.null(news[[i]][1])) next
   news[[i]][1] = removeStopword(news[[i]][1])
   news[[i]][1] = gsub("flash 오류를 우회하기 위한 함수 추가function flash removeCallback", "", news[[i]][1])
 }
 
+cc = c()
+for (j in 1:length(news)) {
+  if (length(news[[j]]) == 0) next
+  cc = c(cc, news[j])
+}
 
 
-
+```
 
 ###2.수집 된 뉴스로 WordCloud를 작도하시오.
 
-library(twitteR); library(RCurl); library(RJSONIO); library(stringr)
-library(streamR); library(ROAuth); library(rJava); library(KoNLP); library(dplyr)
-library(RColorBrewer); library(wordcloud);library(xml2)
+```{r, echo=TRUE}
 
-newsn = sapply(news, extractNoun, USE.NAMES = F)
+newsn = sapply(cc, extractNoun, USE.NAMES = F)
 newss = sapply(newsn, function(x) {
   Filter(function(y) { nchar(y) <= 4 && nchar(y) > 1 && is.hangul(y) }, x)
 })
@@ -103,25 +109,20 @@ wordcloud(names(newsn2), freq=newsn2, scale=c(5,0.5), rot.per=0.25,
           min.freq = 1, random.order = F, random.color = T, colors = pal)
 
 
-
+```
 
 ###3. 수집 된 뉴스로 연관성분석을 하시오.
-library(arules); library(igraph); library(combinat)
-library(arulesViz); library(visNetwork)
-library(rvest); library(httr); library(stringr)
 
-newsu = sapply(news, unique)
+```{r}
+newsu = sapply(cc, unique)
 newsn = sapply(newsu, extractNoun, USE.NAMES = F)
 newss = sapply(newsn, function(x) {
   Filter(function(y) { nchar(y) <= 4 && nchar(y) > 1 && is.hangul(y) }, x)
 })
 
-
-
 ntrans = as(newss, "transactions")
 rules2 = apriori(ntrans, parameter = list(supp=0.2, conf=0.5))
 inspect(sort(rules2))
-
 
 
 subrules3 <- head(sort(rules2, by="lift"), 20)
@@ -137,4 +138,5 @@ visNetwork(
   edges = ig_df2$edges
 ) %>% visEdges(ig_df2$edges) %>%visOptions( highlightNearest = T )
 
+```
 
