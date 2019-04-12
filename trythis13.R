@@ -1,0 +1,36 @@
+#3. 전교생의 국어성적과 영어성적에 대한 상관분석(Correlation)을 수행하시오.
+
+# 1. 데이터 준비 (국어성적과 영어성적의 연관성 분석)
+data %>% select(kor, eng) -> kedata
+# 2. 기술 통계 확인
+describe(kedata)
+# 3. 그래프로 데이터 확인하기
+pairs.panels(kedata)          # 연관계수 확인
+# 4. 상관분석
+cor(kedata, use = "complete.obs",   # 결측치(NA) 제외
+    method = c("pearson"))         # 모수 통계  cf. 비모수(30개 미만)의 경우 spearman)
+# 5. 결과 그래프     x(displ)에 의해 y(cty)가 영향을 받는다
+plot(kor ~ eng, data=kedata)
+abline(lm(kor ~ eng, data=kedata), col='red')  
+
+
+
+# 4. mpg데이터의 displ, cyl, trans, cty, hwy 중 1999년과 2008년 두 해의 고객 만족도가 0과 1이라고 했을 때,
+# 어떤 요소가 만족도에 많은 기여를 했는지 로지스틱 회귀분석하시오.
+
+# 1. 데이터 준비 : 1999년과 2008년 두 해의 만족도가 0과 1 → 영향을 준 요인은??
+unique(mpg$trans); unique(mpg$year);
+cdata3 = mpg %>%
+mutate(trs = ifelse(substr(trans, 1, 4) == 'auto', 1, 0), 
+         y = ifelse(year == 1999, 0, 1)) %>%
+select(y, displ, cyl, trs, cty, hwy)
+# 2. 기본 통계치 확인
+describe(cdata3)
+pairs.panels(cdata3)
+# 3. 분석
+glmdata = glm(y ~ displ+cyl+cty+hwy+trs, family = binomial, data=cdata3)
+summary(glmdata)  # Estimate: 기울기(비례/반비례), Pr: 0.05보다 작으면 영향이 있다
+plot(glmdata)
+
+# 4. coefficients(기울기+절편)와 confint(신뢰구간)로 LOR(Log Odd Ratio) 구하기
+round(exp(cbind(LOR = coef(glmdata), confint(glmdata))), 2)
